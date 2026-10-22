@@ -147,8 +147,8 @@ button:disabled{opacity:.6;cursor:wait}
 </main>
 
 <script>
-// 1) Pega aquí la URL /exec que te da Google Apps Script al implementar:
-const URL_SCRIPT = 'PEGA_AQUI_LA_URL_DE_TU_APLICACION_WEB_/exec';
+// URL de tu aplicación web de Google Apps Script:
+const URL_SCRIPT = 'https://script.google.com/macros/s/AKfycby7XtQ-khcgg1wDiIR-QWNHKtMhcxV_hW7lSDzkQZIZMeNEHcas72wdG4DVhkX8QNHy/exec';
 
 // Cargas de ejemplo. home:true significa que la cantidad se multiplica por el número de hogares.
 const CARGAS = [
@@ -206,67 +206,4 @@ function calcular() {
     const ren = Math.min(.97, simular(a.solar, a.eolica, a.bateria));
     const cobertura = a.respaldo > 0 ? 99.5 : ren * 100;
     const capex = (a.solar*PRECIO.solar + a.eolica*PRECIO.eolica + a.bateria*PRECIO.bateria + a.respaldo*PRECIO.respaldo
-      + Math.ceil(P)*PRECIO.inversor + PRECIO.redFija + hog*PRECIO.redHogar) * PRECIO.imprevistos;
-    const combustible = a.respaldo > 0 ? (1 - ren) * E * 365 * PRECIO.diesel : 0;
-    return {...a, ren: ren*100, coberturaPct: Math.round(cobertura*10)/10, costo: Math.round(capex), combustible: Math.round(combustible)};
-  });
-  const meta = +$('objetivo').value;
-  const ok = alternativas.map((a, i) => i).filter(i => alternativas[i].coberturaPct >= meta);
-  recomendada = ok.length ? ok.sort((x, y) => alternativas[x].costo - alternativas[y].costo)[0]
-    : alternativas.reduce((b, a, i) => a.coberturaPct > alternativas[b].coberturaPct ? i : b, 0);
-  elegida = recomendada;
-  pintarTabla(); pintarResultado();
-}
-let recomendada = 0;
-
-function pintarTabla() {
-  $('tabla').innerHTML = alternativas.map((a, i) => `<tr class="alt ${i === elegida ? 'sel' : ''}" data-i="${i}" tabindex="0">
-    <td>${a.nombre}${i === recomendada ? '<span class="badge">Recomendada</span>' : ''}</td>
-    <td>${a.solar}</td><td>${a.eolica}</td><td>${a.bateria}</td><td>${a.respaldo}</td>
-    <td>${a.coberturaPct} %<div class="bar"><i style="width:${a.coberturaPct}%"></i></div></td><td>${cop(a.costo)}</td></tr>`).join('');
-  document.querySelectorAll('tr.alt').forEach(tr => {
-    const elegir = () => { elegida = +tr.dataset.i; pintarTabla(); pintarResultado(); };
-    tr.onclick = elegir; tr.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); elegir(); } };
-  });
-}
-
-function pintarResultado() {
-  const a = alternativas[elegida], hog = +$('hogares').value || 1;
-  $('rCov').textContent = a.coberturaPct + ' %';
-  $('arc').setAttribute('stroke-dasharray', (a.coberturaPct / 100 * 389.5) + ' 390');
-  $('rCost').textContent = cop(a.costo);
-  $('rHome').textContent = cop(a.costo / hog);
-  $('rRen').textContent = a.ren.toFixed(0) + ' %';
-  $('rFuel').textContent = a.respaldo ? cop(a.combustible) : 'No usa';
-  $('g-sol').setAttribute('opacity', a.solar > 0 ? 1 : .2);
-  $('g-eol').setAttribute('opacity', a.eolica > 0 ? 1 : .2);
-  $('g-bat').setAttribute('opacity', a.bateria > 0 ? 1 : .2);
-  $('g-resp').setAttribute('opacity', a.respaldo > 0 ? 1 : .2);
-}
-
-async function enviar() {
-  const msg = $('msg'), btn = $('btnEnviar');
-  if (E <= 0) { msg.textContent = 'Marca al menos una carga esencial antes de enviar.'; return; }
-  if (URL_SCRIPT.indexOf('PEGA_AQUI') === 0) { msg.textContent = 'Falta pegar la URL de tu aplicación web de Google en la constante URL_SCRIPT.'; return; }
-  const a = alternativas[elegida];
-  const datos = {
-    usuario: $('usuario').value || 'Anónimo', comunidad: $('comunidad').value, hogares: +$('hogares').value,
-    cargas: items, demandaKWhDia: E, picoKW: P, alternativaElegida: a.nombre,
-    alternativas: alternativas.map(x => ({nombre:x.nombre, solarKWp:x.solar, eolicaKW:x.eolica, bateriaKWh:x.bateria, respaldoKW:x.respaldo, coberturaPct:x.coberturaPct, costo:x.costo}))
-  };
-  btn.disabled = true; msg.textContent = 'Generando el informe y enviando el correo…';
-  try {
-    const r = await fetch(URL_SCRIPT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos)});
-    const j = await r.json();
-    msg.textContent = j.ok ? 'Informe enviado. Código de simulación: ' + j.id : 'No se pudo enviar: ' + j.error;
-  } catch (err) { msg.textContent = 'No se pudo conectar con el script. Revisa la URL y que el acceso sea “Cualquier persona”.'; }
-  btn.disabled = false;
-}
-
-pintarCargas();
-['hogares', 'objetivo'].forEach(id => $(id).addEventListener('input', calcular));
-$('btnEnviar').addEventListener('click', enviar);
-calcular();
-</script>
-</body>
-</html>
+      + Math.ceil(P)*PRECIO.inversor + PRECIO.redFija + hog*PRECIO.redHogar)
