@@ -1,106 +1,272 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SolarGuajira | Energía Solar</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Microrred para una comunidad aislada de La Guajira</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f8fb;--card:#fff;--text:#17324d;--muted:#60758a;--solar:#f5a623;--green:#1f9d72;--blue:#1976d2}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:linear-gradient(135deg,#073b66,#126e9e);color:white;padding:22px 7%;display:flex;justify-content:space-between;align-items:center;gap:20px}
-.logo{font-size:24px;font-weight:800}.logo span{color:#ffd166}
-nav a{color:white;text-decoration:none;margin-left:20px;font-weight:600}
-.hero{padding:65px 7%;background:linear-gradient(180deg,#dff5ff,#f5f8fb);display:grid;grid-template-columns:1.2fr .8fr;gap:35px;align-items:center}
-.hero h1{font-size:clamp(38px,6vw,68px);margin:0 0 18px}.hero p{font-size:19px;line-height:1.6;color:var(--muted)}
-.btn{display:inline-block;padding:13px 20px;border-radius:10px;background:var(--solar);color:#17324d;text-decoration:none;font-weight:800;border:0;cursor:pointer}
-.sun{height:270px;width:270px;margin:auto;border-radius:50%;background:#ffd166;box-shadow:0 0 70px #ffd166;display:flex;align-items:center;justify-content:center;font-size:90px}
-section{padding:55px 7%} h2{text-align:center;font-size:34px;margin:0 0 30px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.card{background:var(--card);padding:25px;border-radius:18px;box-shadow:0 8px 25px #17324d12}.icon{font-size:42px}.card h3{margin:10px 0}.card p{color:var(--muted);line-height:1.55}
-.calculator{max-width:760px;margin:auto;background:#fff;padding:30px;border-radius:20px;box-shadow:0 8px 30px #17324d18}
-label{font-weight:700;display:block;margin:15px 0 7px}input{width:100%;padding:13px;border:1px solid #ccd8e2;border-radius:9px;font-size:16px}
-.result{margin-top:22px;padding:20px;border-radius:12px;background:#eaf8f2;display:none}.result strong{font-size:25px;color:var(--green)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center}.stat{background:#073b66;color:white;border-radius:16px;padding:25px}.stat b{display:block;font-size:34px;color:#ffd166}
-footer{background:#082b49;color:white;text-align:center;padding:28px}
-@media(max-width:800px){.hero{grid-template-columns:1fr}.cards,.stats{grid-template-columns:1fr}nav{display:none}.sun{height:210px;width:210px;font-size:70px}}
+:root{--bg:#f4f7f6;--card:#fff;--ink:#12302f;--mute:#5b7170;--line:#d5e0de;--sea:#0f5257;--sun:#f2b705;--wind:#4f86a8;--clay:#b5472f;--ok:#2f7d4f}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1b1b;--card:#142828;--ink:#e6f0ee;--mute:#9db5b2;--line:#27413f;--sea:#5fc1c4}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0}
+header{padding:32px 20px 20px;max-width:1150px;margin:auto}
+header h1{font-size:clamp(1.7rem,4vw,2.6rem);max-width:20ch}
+header p{max-width:62ch;color:var(--mute);margin:12px 0 0}
+main{max-width:1150px;margin:auto;padding:0 20px 48px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px}
+@media(max-width:860px){main{grid-template-columns:1fr}}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px}
+section h2{font-size:1.25rem;margin-bottom:12px}
+.field{display:grid;gap:4px;margin-bottom:12px}
+label.t{font-weight:600;font-size:.9rem}
+input[type=text],input[type=number],select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.load{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.load small{color:var(--mute);display:block}
+.load b{font-variant-numeric:tabular-nums}
+.sum{display:flex;gap:24px;margin-top:12px;font-weight:600}
+.hero{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.ring{position:relative;width:150px;height:150px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring strong{font:700 2rem "Bricolage Grotesque",sans-serif}
+.ring span{font-size:.8rem;color:var(--mute)}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(130px,1fr));gap:14px 28px;flex:1}
+.kpis p{margin:0;font-size:.85rem;color:var(--mute)}
+.kpis b{display:block;font:700 1.3rem "Bricolage Grotesque",sans-serif;color:var(--ink)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+tr.alt{cursor:pointer}
+tr.sel{background:color-mix(in srgb,var(--sun) 22%,transparent)}
+.badge{font-size:.75rem;background:var(--sea);color:#fff;border-radius:99px;padding:1px 8px;margin-left:6px}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:var(--sea)}
+svg text{font:12px "Source Sans 3",sans-serif;fill:var(--ink)}
+.box{fill:var(--card);stroke:var(--sea);stroke-width:1.5}
+.bus{fill:var(--sea)}
+.wire{stroke:var(--mute);stroke-width:2;fill:none}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:600}
+ul.n{margin:8px 0 0;padding-left:20px;color:var(--mute)}
+button{font:600 1rem "Source Sans 3",sans-serif;padding:12px 18px;border:0;border-radius:8px;background:var(--sea);color:#fff;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+#msg{margin-top:10px;font-weight:600}
+.full{grid-column:1/-1}
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">☀️ Solar<span>Guajira</span></div>
-  <nav><a href="#inicio">Inicio</a><a href="#beneficios">Beneficios</a><a href="#calculadora">Calculadora</a></nav>
+  <h1>Electrificación de una comunidad aislada de La Guajira</h1>
+  <p>Elige las cargas esenciales, compara tres alternativas de generación y envía el informe en PDF a tu correo. Los datos son de ejemplo y sirven para un diseño preliminar.</p>
 </header>
 
 <main>
-<section class="hero" id="inicio">
-  <div>
-    <h1>La energía del sol, para un futuro sostenible.</h1>
-    <p>Una aplicación educativa sobre energía solar fotovoltaica: cómo funciona, cuáles son sus beneficios y cuánta energía podrías producir con paneles solares.</p>
-    <a class="btn" href="#calculadora">Calcular producción ☀️</a>
+  <div style="display:grid;gap:20px;align-content:start">
+    <section>
+      <h2>Datos de la comunidad</h2>
+      <div class="field"><label class="t" for="usuario">Tu nombre</label><input id="usuario" type="text" placeholder="Ej. Ana Pérez"></div>
+      <div class="field"><label class="t" for="comunidad">Comunidad</label><input id="comunidad" type="text" value="Comunidad wayuu (ejemplo)"></div>
+      <div class="field"><label class="t" for="hogares">Número de hogares</label><input id="hogares" type="number" min="1" max="500" value="40"></div>
+      <div class="field"><label class="t" for="objetivo">Cobertura mínima que busco</label>
+        <select id="objetivo"><option value="90">90 %</option><option value="95" selected>95 %</option><option value="99">99 %</option></select></div>
+    </section>
+    <section>
+      <h2>Cargas esenciales</h2>
+      <div id="cargas"></div>
+      <div class="sum"><span>Demanda: <span id="sE">0</span> kWh/día</span><span>Pico: <span id="sP">0</span> kW</span></div>
+    </section>
   </div>
-  <div class="sun">☀️</div>
-</section>
 
-<section id="beneficios">
-<h2>¿Por qué energía solar?</h2>
-<div class="cards">
-  <article class="card"><div class="icon">🌱</div><h3>Más sostenible</h3><p>Utiliza la radiación del Sol, un recurso renovable, para generar electricidad sin consumir combustibles fósiles durante la operación.</p></article>
-  <article class="card"><div class="icon">💡</div><h3>Ahorro energético</h3><p>Un sistema fotovoltaico puede producir parte de la electricidad que necesita una vivienda, institución o empresa.</p></article>
-  <article class="card"><div class="icon">🔋</div><h3>Almacenamiento</h3><p>Con baterías, la energía producida durante el día puede almacenarse para utilizarse posteriormente.</p></article>
-</div>
-</section>
+  <div style="display:grid;gap:20px;align-content:start">
+    <section>
+      <h2>Resultado de la alternativa elegida</h2>
+      <div class="hero">
+        <div class="ring"><svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="62" fill="none" stroke="var(--line)" stroke-width="14"/><circle id="arc" cx="75" cy="75" r="62" fill="none" stroke="var(--sun)" stroke-width="14" stroke-linecap="round" stroke-dasharray="0 390"/></svg>
+          <div><strong id="rCov">0 %</strong><span>cobertura autónoma</span></div></div>
+        <div class="kpis">
+          <p>Costo total estimado<b id="rCost">–</b></p>
+          <p>Costo por hogar<b id="rHome">–</b></p>
+          <p>Fracción renovable<b id="rRen">–</b></p>
+          <p>Combustible por año<b id="rFuel">–</b></p>
+        </div>
+      </div>
+    </section>
 
-<section>
-<h2>¿Cómo funciona?</h2>
-<div class="cards">
-  <article class="card"><div class="icon">1️⃣</div><h3>Radiación solar</h3><p>La luz solar llega a la superficie de los paneles fotovoltaicos.</p></article>
-  <article class="card"><div class="icon">2️⃣</div><h3>Panel fotovoltaico</h3><p>Las celdas solares convierten la energía de la luz en electricidad de corriente continua.</p></article>
-  <article class="card"><div class="icon">3️⃣</div><h3>Inversor</h3><p>El inversor transforma la corriente continua en corriente alterna para alimentar equipos eléctricos.</p></article>
-</div>
-</section>
+    <section>
+      <h2>Comparación de alternativas</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Alternativa</th><th>Solar kWp</th><th>Eólica kW</th><th>Batería kWh</th><th>Respaldo kW</th><th>Cobertura</th><th>Costo</th></tr></thead>
+        <tbody id="tabla"></tbody></table></div>
+      <p style="color:var(--mute);font-size:.88rem;margin:10px 0 0">Haz clic en una fila para elegirla. La insignia marca la más económica que cumple tu cobertura mínima.</p>
+    </section>
+  </div>
 
-<section id="calculadora">
-<h2>Calculadora solar</h2>
-<div class="calculator">
-  <p>Introduce la potencia total de tus paneles y las horas solares pico aproximadas por día.</p>
-  <label for="power">Potencia instalada (kW)</label>
-  <input id="power" type="number" min="0" step="0.1" value="1">
-  <label for="hours">Horas solares pico al día</label>
-  <input id="hours" type="number" min="0" step="0.1" value="5">
-  <label for="eff">Rendimiento estimado del sistema (%)</label>
-  <input id="eff" type="number" min="1" max="100" step="1" value="80">
-  <button class="btn" style="margin-top:18px" onclick="calcular()">Calcular</button>
-  <div class="result" id="resultado"></div>
-</div>
-</section>
+  <section class="full">
+    <h2>Esquema de microrred</h2>
+    <svg viewBox="0 0 720 290" width="100%" role="img" aria-label="Esquema de la microrred con generación, almacenamiento, respaldo y cargas">
+      <g id="g-sol"><rect class="box" x="10" y="20" width="120" height="46" rx="6"/><text x="70" y="48" text-anchor="middle">Paneles solares</text>
+        <rect class="box" x="170" y="20" width="100" height="46" rx="6"/><text x="220" y="48" text-anchor="middle">Controlador MPPT</text>
+        <path class="wire" d="M130 43H170M270 43H336"/></g>
+      <g id="g-eol"><rect class="box" x="10" y="92" width="120" height="46" rx="6"/><text x="70" y="120" text-anchor="middle">Aerogenerador</text>
+        <rect class="box" x="170" y="92" width="100" height="46" rx="6"/><text x="220" y="120" text-anchor="middle">Rectificador</text>
+        <path class="wire" d="M130 115H170M270 115H336"/></g>
+      <rect class="bus" x="330" y="20" width="12" height="150" rx="3"/><text x="336" y="188" text-anchor="middle">Barra DC</text>
+      <g id="g-bat"><rect class="box" x="290" y="215" width="92" height="46" rx="6"/><text x="336" y="243" text-anchor="middle">Baterías</text><path class="wire" d="M336 196V215"/></g>
+      <rect class="box" x="390" y="80" width="100" height="46" rx="6"/><text x="440" y="108" text-anchor="middle">Inversor</text>
+      <path class="wire" d="M342 103H390M490 103H530"/>
+      <rect class="bus" x="530" y="20" width="12" height="240" rx="3"/><text x="536" y="280" text-anchor="middle">Barra AC</text>
+      <g id="g-resp"><rect class="box" x="380" y="214" width="120" height="46" rx="6"/><text x="440" y="235" text-anchor="middle">Generador</text><text x="440" y="250" text-anchor="middle">de respaldo</text><path class="wire" d="M500 237H530"/></g>
+      <rect class="box" x="580" y="60" width="130" height="150" rx="6"/>
+      <text x="645" y="95" text-anchor="middle" font-weight="700">Cargas esenciales</text>
+      <text x="645" y="125" text-anchor="middle">Salud</text><text x="645" y="145" text-anchor="middle">Agua</text><text x="645" y="165" text-anchor="middle">Escuela y frío</text><text x="645" y="185" text-anchor="middle">Luz y comunicaciones</text>
+      <path class="wire" d="M542 135H580"/>
+    </svg>
+    <p style="color:var(--mute);margin:6px 0 0">Los bloques que la alternativa elegida no usa se muestran atenuados.</p>
+  </section>
 
-<section>
-<h2>Datos rápidos</h2>
-<div class="stats">
-  <div class="stat"><b>☀️</b>Fuente renovable</div>
-  <div class="stat"><b>🔌</b>Electricidad</div>
-  <div class="stat"><b>🌎</b>Menor dependencia de combustibles fósiles</div>
-</div>
-</section>
+  <section class="full">
+    <h2>Cómo se eligió y qué se supuso</h2>
+    <details open><summary>Selección y cobertura</summary>
+      <ul class="n"><li>Se suman las cargas marcadas (cantidad × potencia × horas) para obtener la demanda diaria y un pico con factor de simultaneidad de 0,8.</li>
+      <li>Cada alternativa se dimensiona con el recurso de La Guajira y se calcula qué parte de la demanda cubre de día, de noche y con baterías.</li>
+      <li>La alternativa recomendada es la más económica que alcanza tu cobertura mínima.</li></ul></details>
+    <details><summary>Supuestos</summary>
+      <ul class="n"><li>Irradiación de 5,5 kWh/m²/día y eficiencia del sistema solar de 75 %.</li><li>Viento medio de 5 a 7 m/s con factor de planta eólico de 25 %.</li><li>Baterías con 80 % de descarga útil y 90 % de eficiencia; 55 % de la demanda ocurre de noche.</li><li>Precios de ejemplo en pesos colombianos, con 15 % de imprevistos.</li></ul></details>
+    <details><summary>Restricciones</summary>
+      <ul class="n"><li>Acceso difícil y logística costosa; calor, polvo y salinidad reducen la vida útil.</li><li>Sin conexión al sistema interconectado nacional.</li><li>El recurso eólico y solar debe medirse en el sitio antes de comprar equipos.</li><li>Se necesita capacitar a la comunidad para operar y mantener el sistema.</li></ul></details>
+  </section>
+
+  <section class="full">
+    <button id="btnEnviar">Generar informe y enviarlo por correo</button>
+    <div id="msg" role="status"></div>
+  </section>
 </main>
 
-<footer>
-  <p><strong>SolarGuajira</strong> — Proyecto educativo de energía renovable.</p>
-  <p>Calculadora orientativa: la producción real depende de ubicación, orientación, temperatura, sombras, equipos y condiciones climáticas.</p>
-</footer>
-
 <script>
-function calcular(){
-  const p=parseFloat(document.getElementById('power').value)||0;
-  const h=parseFloat(document.getElementById('hours').value)||0;
-  const e=(parseFloat(document.getElementById('eff').value)||0)/100;
-  const dia=p*h*e, mes=dia*30, ano=dia*365;
-  const box=document.getElementById('resultado');
-  box.style.display='block';
-  box.innerHTML=`<strong>Producción estimada</strong><br><br>
-  ☀️ Por día: <b>${dia.toFixed(2)} kWh</b><br>
-  📅 Por mes: <b>${mes.toFixed(1)} kWh</b><br>
-  🗓️ Por año: <b>${ano.toFixed(0)} kWh</b>`;
+// 1) Pega aquí la URL /exec que te da Google Apps Script al implementar:
+const URL_SCRIPT = 'PEGA_AQUI_LA_URL_DE_TU_APLICACION_WEB_/exec';
+
+// Cargas de ejemplo. home:true significa que la cantidad se multiplica por el número de hogares.
+const CARGAS = [
+  {n:'Iluminación LED (4 por hogar)', q:4, w:9,  h:5,  home:true,  on:true},
+  {n:'Carga de celulares y radio (por hogar)', q:1, w:10, h:3, home:true, on:true},
+  {n:'Nevera comunitaria de vacunas y alimentos', q:1, w:120, h:24, on:true},
+  {n:'Bomba de agua del pozo', q:1, w:750, h:3, on:true},
+  {n:'Puesto de salud', q:1, w:300, h:8, on:true},
+  {n:'Escuela (6 computadores)', q:6, w:60, h:6, on:true},
+  {n:'Radio y comunicaciones', q:1, w:80, h:24, on:true},
+  {n:'Ventilador (por hogar)', q:1, w:40, h:6, home:true, on:false},
+  {n:'Desalinizador pequeño', q:1, w:500, h:4, on:false}
+];
+const PRECIO = {solar:4500000, eolica:9000000, bateria:1600000, respaldo:1800000, inversor:1200000, redFija:35000000, redHogar:250000, imprevistos:1.15, diesel:2800};
+const PSH = 5.5, EFS = 0.75, CFE = 0.25, NOCHE = 0.55;
+
+const $ = id => document.getElementById(id);
+const fmt = n => Math.round(n).toLocaleString('es-CO');
+const cop = n => '$ ' + fmt(n);
+const up = (n, p) => Math.ceil(n / p) * p;
+let alternativas = [], elegida = 0, items = [], E = 0, P = 0;
+
+function pintarCargas() {
+  $('cargas').innerHTML = CARGAS.map((c, i) =>
+    `<label class="load"><input type="checkbox" data-i="${i}" ${c.on ? 'checked' : ''}>
+     <span>${c.n}<small>${c.q}${c.home ? ' por hogar' : ''} × ${c.w} W × ${c.h} h/día</small></span><b data-kwh="${i}"></b></label>`).join('');
+  $('cargas').addEventListener('change', e => { CARGAS[e.target.dataset.i].on = e.target.checked; calcular(); });
 }
+
+function simular(solar, eolica, bateria) {
+  const solDia = solar * PSH * EFS, vientoDia = eolica * 24 * CFE * 0.85;
+  const dayGen = solDia + vientoDia * (1 - NOCHE), dayDirect = E * (1 - NOCHE), night = E * NOCHE;
+  const dayServed = Math.min(dayDirect, dayGen), surplus = dayGen - dayServed;
+  const nightServed = Math.min(night, vientoDia * NOCHE + Math.min(bateria * 0.72, surplus));
+  return (dayServed + nightServed) / E;
+}
+
+function calcular() {
+  const hog = Math.max(1, +$('hogares').value || 1);
+  items = []; E = 0; P = 0;
+  CARGAS.forEach((c, i) => {
+    const q = c.home ? c.q * hog : c.q, kwh = q * c.w * c.h / 1000;
+    document.querySelector(`[data-kwh="${i}"]`).textContent = fmt(c.home ? kwh : kwh) + ' kWh';
+    if (c.on) { items.push({nombre: c.n, cantidad: q, potenciaW: c.w, horas: c.h}); E += kwh; P += q * c.w / 1000 * 0.8; }
+  });
+  $('sE').textContent = E.toFixed(1); $('sP').textContent = P.toFixed(1);
+  if (E <= 0) { $('tabla').innerHTML = '<tr><td colspan="7">Marca al menos una carga esencial.</td></tr>'; return; }
+
+  const defs = [
+    {nombre:'Solar + baterías', solar:up(E*1.25/(PSH*EFS),.5), eolica:0, bateria:up(E*NOCHE/.72*.8,1), respaldo:0},
+    {nombre:'Solar + eólica + baterías', solar:up(E*.8/(PSH*EFS),.5), eolica:up(E*.35/(24*CFE*.85),.5), bateria:up(E*NOCHE/.72*.6,1), respaldo:0},
+    {nombre:'Híbrido solar + baterías + respaldo', solar:up(E*.9/(PSH*EFS),.5), eolica:0, bateria:up(E*NOCHE/.72*.5,1), respaldo:Math.ceil(P)}
+  ];
+  alternativas = defs.map(a => {
+    const ren = Math.min(.97, simular(a.solar, a.eolica, a.bateria));
+    const cobertura = a.respaldo > 0 ? 99.5 : ren * 100;
+    const capex = (a.solar*PRECIO.solar + a.eolica*PRECIO.eolica + a.bateria*PRECIO.bateria + a.respaldo*PRECIO.respaldo
+      + Math.ceil(P)*PRECIO.inversor + PRECIO.redFija + hog*PRECIO.redHogar) * PRECIO.imprevistos;
+    const combustible = a.respaldo > 0 ? (1 - ren) * E * 365 * PRECIO.diesel : 0;
+    return {...a, ren: ren*100, coberturaPct: Math.round(cobertura*10)/10, costo: Math.round(capex), combustible: Math.round(combustible)};
+  });
+  const meta = +$('objetivo').value;
+  const ok = alternativas.map((a, i) => i).filter(i => alternativas[i].coberturaPct >= meta);
+  recomendada = ok.length ? ok.sort((x, y) => alternativas[x].costo - alternativas[y].costo)[0]
+    : alternativas.reduce((b, a, i) => a.coberturaPct > alternativas[b].coberturaPct ? i : b, 0);
+  elegida = recomendada;
+  pintarTabla(); pintarResultado();
+}
+let recomendada = 0;
+
+function pintarTabla() {
+  $('tabla').innerHTML = alternativas.map((a, i) => `<tr class="alt ${i === elegida ? 'sel' : ''}" data-i="${i}" tabindex="0">
+    <td>${a.nombre}${i === recomendada ? '<span class="badge">Recomendada</span>' : ''}</td>
+    <td>${a.solar}</td><td>${a.eolica}</td><td>${a.bateria}</td><td>${a.respaldo}</td>
+    <td>${a.coberturaPct} %<div class="bar"><i style="width:${a.coberturaPct}%"></i></div></td><td>${cop(a.costo)}</td></tr>`).join('');
+  document.querySelectorAll('tr.alt').forEach(tr => {
+    const elegir = () => { elegida = +tr.dataset.i; pintarTabla(); pintarResultado(); };
+    tr.onclick = elegir; tr.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); elegir(); } };
+  });
+}
+
+function pintarResultado() {
+  const a = alternativas[elegida], hog = +$('hogares').value || 1;
+  $('rCov').textContent = a.coberturaPct + ' %';
+  $('arc').setAttribute('stroke-dasharray', (a.coberturaPct / 100 * 389.5) + ' 390');
+  $('rCost').textContent = cop(a.costo);
+  $('rHome').textContent = cop(a.costo / hog);
+  $('rRen').textContent = a.ren.toFixed(0) + ' %';
+  $('rFuel').textContent = a.respaldo ? cop(a.combustible) : 'No usa';
+  $('g-sol').setAttribute('opacity', a.solar > 0 ? 1 : .2);
+  $('g-eol').setAttribute('opacity', a.eolica > 0 ? 1 : .2);
+  $('g-bat').setAttribute('opacity', a.bateria > 0 ? 1 : .2);
+  $('g-resp').setAttribute('opacity', a.respaldo > 0 ? 1 : .2);
+}
+
+async function enviar() {
+  const msg = $('msg'), btn = $('btnEnviar');
+  if (E <= 0) { msg.textContent = 'Marca al menos una carga esencial antes de enviar.'; return; }
+  if (URL_SCRIPT.indexOf('PEGA_AQUI') === 0) { msg.textContent = 'Falta pegar la URL de tu aplicación web de Google en la constante URL_SCRIPT.'; return; }
+  const a = alternativas[elegida];
+  const datos = {
+    usuario: $('usuario').value || 'Anónimo', comunidad: $('comunidad').value, hogares: +$('hogares').value,
+    cargas: items, demandaKWhDia: E, picoKW: P, alternativaElegida: a.nombre,
+    alternativas: alternativas.map(x => ({nombre:x.nombre, solarKWp:x.solar, eolicaKW:x.eolica, bateriaKWh:x.bateria, respaldoKW:x.respaldo, coberturaPct:x.coberturaPct, costo:x.costo}))
+  };
+  btn.disabled = true; msg.textContent = 'Generando el informe y enviando el correo…';
+  try {
+    const r = await fetch(URL_SCRIPT, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos)});
+    const j = await r.json();
+    msg.textContent = j.ok ? 'Informe enviado. Código de simulación: ' + j.id : 'No se pudo enviar: ' + j.error;
+  } catch (err) { msg.textContent = 'No se pudo conectar con el script. Revisa la URL y que el acceso sea “Cualquier persona”.'; }
+  btn.disabled = false;
+}
+
+pintarCargas();
+['hogares', 'objetivo'].forEach(id => $(id).addEventListener('input', calcular));
+$('btnEnviar').addEventListener('click', enviar);
+calcular();
 </script>
 </body>
 </html>
